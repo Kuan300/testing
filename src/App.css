@@ -1,321 +1,576 @@
-/* Layout */
-#root {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  border-radius: 20px;
+/* 全域樣式 */
+* {
+  box-sizing: border-box;
 }
 
-.app__header {
+/* 引入數學字體 */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=STIX+Two+Math&display=swap');
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 0;
+  overflow-x: hidden;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 24px;
+  flex-direction: column;
+}
+
+/* 標題區域 */
+.app-header {
+  text-align: center;
+  margin: 0;
   background: rgba(255, 255, 255, 0.95);
   padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
-.app__header h1 {
-  color: #4a5568;
-  margin: 0;
-  font-size: 2rem;
+.app-header h1 {
+  color: #2d3748;
+  font-size: 2.5rem;
+  margin: 0 0 10px;
   font-weight: 700;
+  background: linear-gradient(135deg, #4299e1, #9f7aea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.actions {
+.app-header p {
+  color: #718096;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* 主內容區域 */
+.main-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 0;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* 控制區域 */
+.controls {
+  margin-bottom: 30px;
+}
+
+.category-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-}
-
-.actions button {
-  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-}
-
-.actions button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-}
-
-.actions button:disabled {
-  background: #cbd5e0;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.actions .import {
-  position: relative;
-  overflow: hidden;
-  border: 2px solid #4299e1;
-  border-radius: 8px;
-  padding: 10px 12px;
-  background: linear-gradient(135deg, #4299e1, #3182ce);
-  color: white;
-  font-weight: 600;
-}
-.actions .import input[type="file"] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.editor {
-  background: rgba(255, 255, 255, 0.95);
-  border: none;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.preview {
-  background: rgba(255, 255, 255, 0.95);
-  border: none;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.section {
+  gap: 10px;
   margin-bottom: 20px;
 }
-.section h3 {
-  margin: 0 0 12px;
-  color: #4a5568;
-  font-size: 1.2rem;
-  font-weight: 600;
-  border-left: 4px solid #4299e1;
-  padding-left: 12px;
-}
 
-.fields {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.row.end {
-  grid-template-columns: 1fr auto;
-}
-
-.card {
+.tab {
+  padding: 12px 20px;
   border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
-  background: linear-gradient(135deg, #f7fafc, #edf2f7);
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  border-color: #4299e1;
-  box-shadow: 0 4px 15px rgba(66, 153, 225, 0.1);
-}
-
-.sublist { margin-top: 12px; }
-.sublist__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.sublist__header button {
-  background: linear-gradient(135deg, #48bb78, #38a169);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  border-radius: 25px;
+  background: white;
+  color: #4a5568;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.sublist__header button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+.tab:hover {
+  border-color: #4299e1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(66, 153, 225, 0.2);
 }
 
-input, textarea {
+.tab.active {
+  background: linear-gradient(135deg, #4299e1, #3182ce);
+  color: white;
+  border-color: #3182ce;
+}
+
+.search-box {
+  max-width: 400px;
+}
+
+.search-box input {
   width: 100%;
-  box-sizing: border-box;
-  border-radius: 8px;
-  border: 2px solid #e2e8f0;
-  background: white;
-  color: #2d3748;
   padding: 12px 16px;
-  font-size: 0.95rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
   transition: all 0.3s ease;
 }
 
-input:focus, textarea:focus {
+.search-box input:focus {
   outline: none;
   border-color: #4299e1;
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
 }
 
-textarea { 
-  resize: vertical; 
-  min-height: 80px;
+/* 符號網格 */
+.symbols-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
 }
 
-.editor button {
-  background: linear-gradient(135deg, #ed8936, #dd6b20);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 12px;
+.symbol-button {
+  padding: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.symbol-button:hover {
+  border-color: #4299e1;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(66, 153, 225, 0.2);
+  background: linear-gradient(135deg, #f7fafc, #edf2f7);
+}
+
+.symbol-button .symbol {
+  font-family: 'STIX Two Math', 'Times New Roman', serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.symbol-button:hover .symbol {
+  transform: scale(1.1) translateY(-2px);
+  color: #3b82f6;
+  text-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+}
+
+.symbol-button .name {
+  font-family: 'Crimson Text', serif;
+  font-size: 0.9rem;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.3;
+  transition: all 0.3s ease;
   font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.symbol-button:hover .name {
+  color: #334155;
+  transform: translateY(-1px);
+}
+
+/* 輸入區域 */
+.input-section {
+  margin-bottom: 30px;
+}
+
+.input-section h3 {
+  color: #2d3748;
+  margin: 0 0 15px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.input-container {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+
+.input-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 24px;
+  border: 1px solid #e9ecef;
+  font-size: 1.4rem;
+  font-family: 'Crimson Text', 'Times New Roman', serif;
+  resize: vertical;
+  outline: none;
+  background: linear-gradient(135deg, #fefefe, #f8f9fa);
+  border-radius: 12px;
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+}
+
+.input-textarea:focus {
+  background: white;
+  border-color: #3b82f6;
+  box-shadow: 
+    0 0 0 3px rgba(59, 130, 246, 0.1),
+    inset 0 2px 4px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.input-actions {
+  display: flex;
+  gap: 10px;
+  padding: 15px 20px;
+  background: #f7fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.input-actions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.editor button:hover {
+.copy-btn {
+  background: linear-gradient(135deg, #48bb78, #38a169);
+  color: white;
+}
+
+.copy-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+}
+
+.latex-btn {
+  background: linear-gradient(135deg, #ed8936, #dd6b20);
+  color: white;
+}
+
+.latex-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3);
 }
 
-.preview .paper {
-  background: white;
-  color: #2d3748;
-  border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-.paper__header { 
-  text-align: center; 
-  margin-bottom: 24px;
-  padding-bottom: 20px;
-  border-bottom: 3px solid #4299e1;
-}
-.paper__header h1 { 
-  color: #2d3748; 
-  font-size: 2.2rem; 
-  margin: 0 0 8px;
-  font-weight: 700;
-}
-.paper__header .subtitle { 
-  font-weight: 600; 
-  color: #4299e1;
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-}
-.paper__header .meta { 
-  color: #718096; 
-  font-size: 15px; 
-  margin-top: 4px; 
-}
-
-.paper section { margin-top: 20px; }
-.paper h2 { 
-  font-size: 1.3rem; 
-  margin: 0 0 12px; 
-  border-bottom: 2px solid #4299e1; 
-  padding-bottom: 6px; 
-  color: #2d3748;
-  font-weight: 600;
-}
-.paper .item { 
-  margin-bottom: 16px; 
-  padding: 12px;
-  background: #f7fafc;
-  border-radius: 8px;
-  border-left: 4px solid #48bb78;
-}
-.paper .item__header { 
-  display: flex; 
-  align-items: baseline; 
-  justify-content: space-between; 
-  gap: 12px; 
-  margin-bottom: 8px;
-}
-.paper .item__title { 
-  font-weight: 700; 
-  color: #2d3748;
-  font-size: 1.1rem;
-}
-.paper .item__org { 
-  color: #4299e1; 
-  font-weight: 600;
-}
-.paper .item__meta { 
-  color: #718096; 
-  font-size: 14px; 
-  white-space: nowrap; 
-}
-.paper ul { 
-  margin: 8px 0 0 20px; 
-  color: #4a5568;
-}
-.paper ul li {
-  margin-bottom: 4px;
-}
-.paper .skills { 
-  margin: 0; 
-  color: #4a5568;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-.preview__actions { 
-  display: flex; 
-  justify-content: flex-end; 
-  margin-top: 16px; 
-}
-
-.preview__actions button {
-  background: linear-gradient(135deg, #9f7aea, #805ad5);
+.clear-btn {
+  background: linear-gradient(135deg, #e53e3e, #c53030);
   color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 20px;
+}
+
+.clear-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+/* 預覽區域 */
+.preview-section h3 {
+  color: #2d3748;
+  margin: 0 0 15px;
+  font-size: 1.3rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(159, 122, 234, 0.3);
 }
 
-.preview__actions button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(159, 122, 234, 0.4);
+.preview-container {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  background: white;
+  min-height: 80px;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .grid { grid-template-columns: 1fr; }
+.preview-text {
+  font-size: 1.4rem;
+  font-family: 'Crimson Text', serif;
+  color: #374151;
+  line-height: 2;
+  white-space: pre-wrap;
+  min-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Print */
-@media print {
-  body { background: white; }
-  .no-print, .editor, .app__header { display: none !important; }
-  .preview { border: none; padding: 0; }
-  .paper { box-shadow: none; }
+/* 課本式數學表達式樣式 */
+.math-expression {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: baseline;
+  justify-content: center;
+  padding: 30px 40px;
+  background: linear-gradient(135deg, #fefefe, #f8f9fa);
+  border-radius: 16px;
+  border: 1px solid #e9ecef;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  font-family: 'STIX Two Math', 'Times New Roman', serif;
+  line-height: 1.4;
+  position: relative;
+}
+
+.math-expression::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+  border-radius: 16px 16px 0 0;
+}
+
+.math-char {
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+/* 數學符號樣式 - 課本風格 */
+.math-symbol {
+  font-family: 'STIX Two Math', 'Times New Roman', serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #1e293b;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(139, 92, 246, 0.08));
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin: 0 2px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  position: relative;
+}
+
+.math-symbol::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.math-symbol:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15));
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 
+    0 4px 12px rgba(59, 130, 246, 0.2),
+    0 2px 6px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* 普通文字樣式 - 課本風格 */
+.math-text {
+  font-family: 'Crimson Text', 'Times New Roman', serif;
+  font-size: 1.4rem;
+  color: #374151;
+  font-weight: 400;
+  padding: 2px 4px;
+  margin: 0 1px;
+  transition: all 0.2s ease;
+}
+
+.math-text:hover {
+  color: #1f2937;
+  background: rgba(55, 65, 81, 0.08);
+  border-radius: 4px;
+  transform: translateY(-1px);
+}
+
+/* 特殊數學符號的樣式 */
+.math-symbol.superscript {
+  font-size: 1.2rem;
+  vertical-align: super;
+  padding: 2px 4px;
+  margin: 0;
+}
+
+.math-symbol.subscript {
+  font-size: 1.2rem;
+  vertical-align: sub;
+  padding: 2px 4px;
+  margin: 0;
+}
+
+/* 分數線樣式 */
+.math-fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 4px;
+}
+
+.math-numerator,
+.math-denominator {
+  padding: 2px 8px;
+  font-family: 'STIX Two Math', serif;
+}
+
+.math-fraction-line {
+  width: 100%;
+  height: 2px;
+  background: #374151;
+  margin: 2px 0;
+  border-radius: 1px;
+}
+
+/* 課本式預覽佔位符 */
+.preview-placeholder {
+  text-align: center;
+  padding: 60px 40px;
+  background: linear-gradient(135deg, #fefefe, #f8f9fa);
+  border-radius: 16px;
+  border: 1px solid #e9ecef;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  position: relative;
+}
+
+.preview-placeholder::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+  border-radius: 16px 16px 0 0;
+}
+
+.placeholder-icon {
+  font-size: 4rem;
+  margin-bottom: 24px;
+  opacity: 0.7;
+  filter: grayscale(20%);
+}
+
+.placeholder-text {
+  font-family: 'Crimson Text', serif;
+  font-size: 1.4rem;
+  color: #495057;
+  margin-bottom: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.placeholder-hint {
+  font-family: 'Crimson Text', serif;
+  font-size: 1.1rem;
+  color: #6c757d;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* 頁尾 */
+.app-footer {
+  text-align: center;
+  margin: 0;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.app-footer p {
+  color: #718096;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .app {
+    padding: 0;
+    border-radius: 0;
+  }
+  
+  .app-header h1 {
+    font-size: 2rem;
+  }
+  
+  .category-tabs {
+    justify-content: center;
+  }
+  
+  .symbols-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+  }
+  
+  .input-actions {
+    flex-direction: column;
+  }
+  
+  .input-actions button {
+    width: 100%;
+  }
+  
+  .math-expression {
+    padding: 20px 25px;
+    gap: 2px;
+  }
+  
+  .math-symbol {
+    font-size: 1.8rem;
+    padding: 4px 6px;
+  }
+  
+  .math-text {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .symbols-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+  
+  .symbol-button .symbol {
+    font-size: 1.5rem;
+  }
+  
+  .symbol-button .name {
+    font-size: 0.75rem;
+  }
+  
+  .math-expression {
+    padding: 15px 20px;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .math-symbol {
+    font-size: 1.6rem;
+    margin: 3px;
+    padding: 3px 5px;
+  }
+  
+  .math-text {
+    font-size: 1.1rem;
+    margin: 2px;
+  }
+  
+  .placeholder-icon {
+    font-size: 3rem;
+  }
+  
+  .placeholder-text {
+    font-size: 1.2rem;
+  }
+  
+  .placeholder-hint {
+    font-size: 1rem;
+  }
 }
