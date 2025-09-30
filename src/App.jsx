@@ -217,10 +217,35 @@ function App() {
         </div>
 
         <div className="preview-section">
-          <h3>預覽</h3>
+          <h3>數學表達式預覽</h3>
           <div className="preview-container">
             <div className="preview-text">
-              {inputText || '輸入文字後將在此顯示預覽...'}
+              {inputText ? (
+                <div className="math-expression">
+                  {inputText.split('').map((char, index) => {
+                    // 查找符號資訊
+                    const symbolInfo = Object.values(MATH_SYMBOLS)
+                      .flatMap(cat => cat.symbols)
+                      .find(s => s.symbol === char)
+                    
+                    return (
+                      <span 
+                        key={index}
+                        className={`math-char ${symbolInfo ? 'math-symbol' : 'math-text'}`}
+                        title={symbolInfo ? `${symbolInfo.name} (LaTeX: ${symbolInfo.latex})` : char}
+                      >
+                        {char}
+                      </span>
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className="preview-placeholder">
+                  <div className="placeholder-icon">📐</div>
+                  <div className="placeholder-text">輸入數學符號後將在此顯示預覽...</div>
+                  <div className="placeholder-hint">支援微積分、物理、代數等符號</div>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -137,9 +137,17 @@
 }
 
 .symbol-button .symbol {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
   color: #2d3748;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.symbol-button:hover .symbol {
+  transform: scale(1.1);
+  color: #4299e1;
+  text-shadow: 0 2px 4px rgba(66, 153, 225, 0.3);
 }
 
 .symbol-button .name {
@@ -147,6 +155,11 @@
   color: #718096;
   text-align: center;
   line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.symbol-button:hover .name {
+  color: #4a5568;
 }
 
 /* 輸入區域 */
@@ -173,10 +186,19 @@
   min-height: 120px;
   padding: 20px;
   border: none;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-family: 'Courier New', monospace;
   resize: vertical;
   outline: none;
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  border-radius: 8px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.input-textarea:focus {
+  background: white;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1), inset 0 2px 4px rgba(0, 0, 0, 0.06);
 }
 
 .input-actions {
@@ -246,8 +268,84 @@
   font-size: 1.2rem;
   font-family: 'Courier New', monospace;
   color: #4a5568;
-  line-height: 1.6;
+  line-height: 1.8;
   white-space: pre-wrap;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 數學表達式樣式 */
+.math-expression {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  align-items: baseline;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  border-radius: 12px;
+  border: 2px solid #cbd5e0;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.math-char {
+  display: inline-block;
+  transition: all 0.2s ease;
+  padding: 4px 2px;
+  border-radius: 4px;
+}
+
+.math-symbol {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2b6cb0;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.math-symbol:hover {
+  background: rgba(59, 130, 246, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.math-text {
+  font-size: 1.2rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.math-text:hover {
+  color: #2d3748;
+  background: rgba(74, 85, 104, 0.1);
+}
+
+/* 預覽佔位符 */
+.preview-placeholder {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.placeholder-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
+.placeholder-text {
+  font-size: 1.2rem;
+  color: #718096;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.placeholder-hint {
+  font-size: 1rem;
+  color: #a0aec0;
+  font-style: italic;
 }
 
 /* 頁尾 */
@@ -294,6 +392,20 @@
   .input-actions button {
     width: 100%;
   }
+  
+  .math-expression {
+    padding: 15px;
+    gap: 1px;
+  }
+  
+  .math-symbol {
+    font-size: 1.5rem;
+    padding: 3px 1px;
+  }
+  
+  .math-text {
+    font-size: 1.1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -307,5 +419,33 @@
   
   .symbol-button .name {
     font-size: 0.75rem;
+  }
+  
+  .math-expression {
+    padding: 10px;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .math-symbol {
+    font-size: 1.3rem;
+    margin: 2px;
+  }
+  
+  .math-text {
+    font-size: 1rem;
+    margin: 2px;
+  }
+  
+  .placeholder-icon {
+    font-size: 2rem;
+  }
+  
+  .placeholder-text {
+    font-size: 1rem;
+  }
+  
+  .placeholder-hint {
+    font-size: 0.9rem;
   }
 }
