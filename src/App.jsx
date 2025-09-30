@@ -1,396 +1,234 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useState, useMemo } from 'react'
 import './App.css'
 
-const STORAGE_KEY = 'resume-data-v1'
-
-const createEmptyResume = () => ({
-  basics: {
-    name: '',
-    title: '',
-    email: '',
-    phone: '',
-    website: '',
-    location: '',
+const MATH_SYMBOLS = {
+  calculus: {
+    name: '微積分',
+    symbols: [
+      { symbol: '∂', name: '偏微分', latex: '\\partial' },
+      { symbol: '∫', name: '積分', latex: '\\int' },
+      { symbol: '∬', name: '雙重積分', latex: '\\iint' },
+      { symbol: '∭', name: '三重積分', latex: '\\iiint' },
+      { symbol: '∮', name: '環積分', latex: '\\oint' },
+      { symbol: '∇', name: '梯度', latex: '\\nabla' },
+      { symbol: '∆', name: '拉普拉斯算子', latex: '\\Delta' },
+      { symbol: '∞', name: '無窮大', latex: '\\infty' },
+      { symbol: 'lim', name: '極限', latex: '\\lim' },
+      { symbol: '∑', name: '求和', latex: '\\sum' },
+      { symbol: '∏', name: '連乘', latex: '\\prod' },
+      { symbol: 'dx', name: '微分元素', latex: 'dx' },
+    ]
   },
-  summary: '',
-  experience: [
-    {
-      id: crypto.randomUUID(),
-      company: '',
-      role: '',
-      startDate: '',
-      endDate: '',
-      location: '',
-      highlights: [''],
-    },
-  ],
-  education: [
-    {
-      id: crypto.randomUUID(),
-      institution: '',
-      degree: '',
-      startDate: '',
-      endDate: '',
-      location: '',
-      details: [''],
-    },
-  ],
-  skills: [''],
-})
-
-function useLocalStorageState(key, initialValue) {
-  const read = () => {
-    try {
-      const raw = localStorage.getItem(key)
-      return raw ? JSON.parse(raw) : initialValue
-    } catch (_) {
-      return initialValue
-    }
+  physics: {
+    name: '物理',
+    symbols: [
+      { symbol: 'α', name: '阿爾法', latex: '\\alpha' },
+      { symbol: 'β', name: '貝塔', latex: '\\beta' },
+      { symbol: 'γ', name: '伽瑪', latex: '\\gamma' },
+      { symbol: 'δ', name: '德爾塔', latex: '\\delta' },
+      { symbol: 'ε', name: '伊普西龍', latex: '\\epsilon' },
+      { symbol: 'θ', name: '西塔', latex: '\\theta' },
+      { symbol: 'λ', name: '拉姆達', latex: '\\lambda' },
+      { symbol: 'μ', name: '繆', latex: '\\mu' },
+      { symbol: 'π', name: '圓周率', latex: '\\pi' },
+      { symbol: 'σ', name: '西格瑪', latex: '\\sigma' },
+      { symbol: 'τ', name: '陶', latex: '\\tau' },
+      { symbol: 'φ', name: '斐', latex: '\\phi' },
+      { symbol: 'ω', name: '歐米茄', latex: '\\omega' },
+      { symbol: 'Ω', name: '大歐米茄', latex: '\\Omega' },
+      { symbol: 'ℏ', name: '約化普朗克常數', latex: '\\hbar' },
+      { symbol: 'c', name: '光速', latex: 'c' },
+      { symbol: 'h', name: '普朗克常數', latex: 'h' },
+    ]
+  },
+  algebra: {
+    name: '代數',
+    symbols: [
+      { symbol: '√', name: '平方根', latex: '\\sqrt' },
+      { symbol: '∛', name: '立方根', latex: '\\sqrt[3]' },
+      { symbol: '∜', name: '四次方根', latex: '\\sqrt[4]' },
+      { symbol: '±', name: '正負', latex: '\\pm' },
+      { symbol: '∓', name: '負正', latex: '\\mp' },
+      { symbol: '×', name: '乘號', latex: '\\times' },
+      { symbol: '÷', name: '除號', latex: '\\div' },
+      { symbol: '⋅', name: '點積', latex: '\\cdot' },
+      { symbol: '∧', name: '邏輯與', latex: '\\wedge' },
+      { symbol: '∨', name: '邏輯或', latex: '\\vee' },
+      { symbol: '¬', name: '邏輯非', latex: '\\neg' },
+      { symbol: '⊕', name: '異或', latex: '\\oplus' },
+      { symbol: '⊗', name: '張量積', latex: '\\otimes' },
+      { symbol: '∈', name: '屬於', latex: '\\in' },
+      { symbol: '∉', name: '不屬於', latex: '\\notin' },
+      { symbol: '⊂', name: '子集', latex: '\\subset' },
+      { symbol: '⊃', name: '超集', latex: '\\supset' },
+      { symbol: '∪', name: '聯集', latex: '\\cup' },
+      { symbol: '∩', name: '交集', latex: '\\cap' },
+      { symbol: '∅', name: '空集', latex: '\\emptyset' },
+    ]
+  },
+  comparison: {
+    name: '比較',
+    symbols: [
+      { symbol: '=', name: '等於', latex: '=' },
+      { symbol: '≠', name: '不等於', latex: '\\neq' },
+      { symbol: '<', name: '小於', latex: '<' },
+      { symbol: '>', name: '大於', latex: '>' },
+      { symbol: '≤', name: '小於等於', latex: '\\leq' },
+      { symbol: '≥', name: '大於等於', latex: '\\geq' },
+      { symbol: '≈', name: '約等於', latex: '\\approx' },
+      { symbol: '≡', name: '恆等於', latex: '\\equiv' },
+      { symbol: '≅', name: '全等於', latex: '\\cong' },
+      { symbol: '∼', name: '相似於', latex: '\\sim' },
+      { symbol: '∝', name: '正比於', latex: '\\propto' },
+      { symbol: '≪', name: '遠小於', latex: '\\ll' },
+      { symbol: '≫', name: '遠大於', latex: '\\gg' },
+    ]
+  },
+  arrows: {
+    name: '箭頭',
+    symbols: [
+      { symbol: '→', name: '右箭頭', latex: '\\rightarrow' },
+      { symbol: '←', name: '左箭頭', latex: '\\leftarrow' },
+      { symbol: '↑', name: '上箭頭', latex: '\\uparrow' },
+      { symbol: '↓', name: '下箭頭', latex: '\\downarrow' },
+      { symbol: '↔', name: '雙向箭頭', latex: '\\leftrightarrow' },
+      { symbol: '⇒', name: '邏輯蘊含', latex: '\\Rightarrow' },
+      { symbol: '⇐', name: '邏輯逆蘊含', latex: '\\Leftarrow' },
+      { symbol: '⇔', name: '邏輯等價', latex: '\\Leftrightarrow' },
+      { symbol: '↦', name: '映射到', latex: '\\mapsto' },
+      { symbol: '⟶', name: '函數映射', latex: '\\longrightarrow' },
+      { symbol: '⟵', name: '反向映射', latex: '\\longleftarrow' },
+      { symbol: '⟷', name: '雙向映射', latex: '\\longleftrightarrow' },
+    ]
   }
-  const [state, setState] = useState(read)
-  useEffect(() => {
-    try {
-      localStorage.setItem(key, JSON.stringify(state))
-    } catch (_) {
-      // ignore
-    }
-  }, [key, state])
-  return [state, setState]
 }
 
 function App() {
-  const [resume, setResume] = useLocalStorageState(STORAGE_KEY, createEmptyResume())
+  const [selectedCategory, setSelectedCategory] = useState('calculus')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [inputText, setInputText] = useState('')
+  const [showCopied, setShowCopied] = useState(false)
 
-  const handleBasicsChange = (field, value) => {
-    setResume(prev => ({ ...prev, basics: { ...prev.basics, [field]: value } }))
+  const filteredSymbols = useMemo(() => {
+    const category = MATH_SYMBOLS[selectedCategory]
+    if (!searchTerm) return category.symbols
+    
+    return category.symbols.filter(symbol => 
+      symbol.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      symbol.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  }, [selectedCategory, searchTerm])
+
+  const handleSymbolClick = (symbol) => {
+    setInputText(prev => prev + symbol.symbol)
   }
 
-  const handleSummaryChange = (value) => {
-    setResume(prev => ({ ...prev, summary: value }))
-  }
-
-  const updateListItem = (section, id, field, value) => {
-    setResume(prev => ({
-      ...prev,
-      [section]: prev[section].map(item => item.id === id ? { ...item, [field]: value } : item)
-    }))
-  }
-
-  const updateStringArrayItem = (section, index, value) => {
-    setResume(prev => ({
-      ...prev,
-      [section]: prev[section].map((v, i) => i === index ? value : v)
-    }))
-  }
-
-  const addExperience = () => {
-    setResume(prev => ({
-      ...prev,
-      experience: [
-        ...prev.experience,
-        { id: crypto.randomUUID(), company: '', role: '', startDate: '', endDate: '', location: '', highlights: [''] }
-      ],
-    }))
-  }
-
-  const removeExperience = (id) => {
-    setResume(prev => ({ ...prev, experience: prev.experience.filter(item => item.id !== id) }))
-  }
-
-  const addExperienceHighlight = (id) => {
-    setResume(prev => ({
-      ...prev,
-      experience: prev.experience.map(item => item.id === id ? { ...item, highlights: [...item.highlights, ''] } : item)
-    }))
-  }
-
-  const updateExperienceHighlight = (id, index, value) => {
-    setResume(prev => ({
-      ...prev,
-      experience: prev.experience.map(item => item.id === id ? { ...item, highlights: item.highlights.map((h, i) => i === index ? value : h) } : item)
-    }))
-  }
-
-  const removeExperienceHighlight = (id, index) => {
-    setResume(prev => ({
-      ...prev,
-      experience: prev.experience.map(item => item.id === id ? { ...item, highlights: item.highlights.filter((_, i) => i !== index) } : item)
-    }))
-  }
-
-  const addEducation = () => {
-    setResume(prev => ({
-      ...prev,
-      education: [
-        ...prev.education,
-        { id: crypto.randomUUID(), institution: '', degree: '', startDate: '', endDate: '', location: '', details: [''] }
-      ],
-    }))
-  }
-
-  const removeEducation = (id) => {
-    setResume(prev => ({ ...prev, education: prev.education.filter(item => item.id !== id) }))
-  }
-
-  const addEducationDetail = (id) => {
-    setResume(prev => ({
-      ...prev,
-      education: prev.education.map(item => item.id === id ? { ...item, details: [...item.details, ''] } : item)
-    }))
-  }
-
-  const updateEducationDetail = (id, index, value) => {
-    setResume(prev => ({
-      ...prev,
-      education: prev.education.map(item => item.id === id ? { ...item, details: item.details.map((d, i) => i === index ? value : d) } : item)
-    }))
-  }
-
-  const removeEducationDetail = (id, index) => {
-    setResume(prev => ({
-      ...prev,
-      education: prev.education.map(item => item.id === id ? { ...item, details: item.details.filter((_, i) => i !== index) } : item)
-    }))
-  }
-
-  const addSkill = () => {
-    setResume(prev => ({ ...prev, skills: [...prev.skills, ''] }))
-  }
-
-  const removeSkill = (index) => {
-    setResume(prev => ({ ...prev, skills: prev.skills.filter((_, i) => i !== index) }))
-  }
-
-  const handleReset = () => {
-    setResume(createEmptyResume())
-  }
-
-  const handleExport = () => {
-    const blob = new Blob([JSON.stringify(resume, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'resume.json'
-    a.click()
-    URL.revokeObjectURL(url)
-  }
-
-  const handleImport = async (file) => {
-    const text = await file.text()
+  const handleCopyAll = async () => {
     try {
-      const data = JSON.parse(text)
-      setResume(prev => ({ ...prev, ...data }))
-    } catch (_) {
-      alert('Invalid JSON file')
+      await navigator.clipboard.writeText(inputText)
+      setShowCopied(true)
+      setTimeout(() => setShowCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy: ', err)
     }
   }
 
-  const printResume = () => {
-    window.print()
+  const handleClear = () => {
+    setInputText('')
   }
 
-  const hasContent = useMemo(() => {
-    return JSON.stringify(resume) !== JSON.stringify(createEmptyResume())
-  }, [resume])
+  const handleCopyLatex = () => {
+    const latexText = inputText.split('').map(char => {
+      const symbol = Object.values(MATH_SYMBOLS)
+        .flatMap(cat => cat.symbols)
+        .find(s => s.symbol === char)
+      return symbol ? symbol.latex : char
+    }).join(' ')
+    
+    navigator.clipboard.writeText(latexText)
+  }
 
   return (
     <div className="app">
-      <header className="app__header">
-        <h1>個人簡歷編輯器</h1>
-        <div className="actions">
-          <button onClick={addExperience}>新增經歷</button>
-          <button onClick={addEducation}>新增學歷</button>
-          <button onClick={addSkill}>新增技能</button>
-          <label className="import">
-            匯入JSON
-            <input type="file" accept="application/json" onChange={(e) => e.target.files?.[0] && handleImport(e.target.files[0])} />
-          </label>
-          <button onClick={handleExport} disabled={!hasContent}>匯出JSON</button>
-          <button onClick={printResume}>列印/匯出PDF</button>
-          <button onClick={handleReset}>重置</button>
-        </div>
+      <header className="app-header">
+        <h1>數學符號輸入器</h1>
+        <p>點擊符號快速輸入，支援微積分、物理、代數等常用符號</p>
       </header>
 
-      <main className="grid">
-        <section className="editor">
-          <h2>編輯</h2>
-          <div className="section">
-            <h3>基本資訊</h3>
-            <div className="fields">
-              <input placeholder="姓名" value={resume.basics.name} onChange={(e) => handleBasicsChange('name', e.target.value)} />
-              <input placeholder="職稱" value={resume.basics.title} onChange={(e) => handleBasicsChange('title', e.target.value)} />
-              <input placeholder="Email" value={resume.basics.email} onChange={(e) => handleBasicsChange('email', e.target.value)} />
-              <input placeholder="電話" value={resume.basics.phone} onChange={(e) => handleBasicsChange('phone', e.target.value)} />
-              <input placeholder="網站/LinkedIn" value={resume.basics.website} onChange={(e) => handleBasicsChange('website', e.target.value)} />
-              <input placeholder="所在地" value={resume.basics.location} onChange={(e) => handleBasicsChange('location', e.target.value)} />
+      <main className="main-content">
+        <div className="controls">
+          <div className="category-tabs">
+            {Object.entries(MATH_SYMBOLS).map(([key, category]) => (
+              <button
+                key={key}
+                className={`tab ${selectedCategory === key ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(key)}
+              >
+                {category.name}
+              </button>
+            ))}
+          </div>
+          
+          <div className="search-box">
+            <input
+              type="text"
+              placeholder="搜尋符號或名稱..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="symbols-grid">
+          {filteredSymbols.map((symbol, index) => (
+            <button
+              key={index}
+              className="symbol-button"
+              onClick={() => handleSymbolClick(symbol)}
+              title={`${symbol.name} (LaTeX: ${symbol.latex})`}
+            >
+              <span className="symbol">{symbol.symbol}</span>
+              <span className="name">{symbol.name}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="input-section">
+          <h3>輸入區域</h3>
+          <div className="input-container">
+            <textarea
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="點擊上方符號或直接輸入..."
+              className="input-textarea"
+            />
+            <div className="input-actions">
+              <button onClick={handleCopyAll} className="copy-btn">
+                {showCopied ? '已複製!' : '複製文字'}
+              </button>
+              <button onClick={handleCopyLatex} className="latex-btn">
+                複製 LaTeX
+              </button>
+              <button onClick={handleClear} className="clear-btn">
+                清除
+              </button>
             </div>
           </div>
+        </div>
 
-          <div className="section">
-            <h3>自我介紹</h3>
-            <textarea rows={5} placeholder="簡短介紹你自己..." value={resume.summary} onChange={(e) => handleSummaryChange(e.target.value)} />
+        <div className="preview-section">
+          <h3>預覽</h3>
+          <div className="preview-container">
+            <div className="preview-text">
+              {inputText || '輸入文字後將在此顯示預覽...'}
+            </div>
           </div>
-
-          <div className="section">
-            <h3>工作經歷</h3>
-            {resume.experience.map(exp => (
-              <div key={exp.id} className="card">
-                <div className="row">
-                  <input placeholder="公司" value={exp.company} onChange={(e) => updateListItem('experience', exp.id, 'company', e.target.value)} />
-                  <input placeholder="職稱" value={exp.role} onChange={(e) => updateListItem('experience', exp.id, 'role', e.target.value)} />
-                </div>
-                <div className="row">
-                  <input placeholder="起始 (YYYY-MM)" value={exp.startDate} onChange={(e) => updateListItem('experience', exp.id, 'startDate', e.target.value)} />
-                  <input placeholder="結束 (YYYY-MM/至今)" value={exp.endDate} onChange={(e) => updateListItem('experience', exp.id, 'endDate', e.target.value)} />
-                  <input placeholder="地點" value={exp.location} onChange={(e) => updateListItem('experience', exp.id, 'location', e.target.value)} />
-                </div>
-                <div className="sublist">
-                  <div className="sublist__header">
-                    <span>亮點/成就</span>
-                    <button onClick={() => addExperienceHighlight(exp.id)}>新增亮點</button>
-                  </div>
-                  {exp.highlights.map((h, i) => (
-                    <div className="row" key={i}>
-                      <input placeholder={`亮點 #${i + 1}`} value={h} onChange={(e) => updateExperienceHighlight(exp.id, i, e.target.value)} />
-                      <button onClick={() => removeExperienceHighlight(exp.id, i)}>移除</button>
-                    </div>
-                  ))}
-                </div>
-                <div className="row end">
-                  <button onClick={() => removeExperience(exp.id)}>刪除這筆經歷</button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="section">
-            <h3>學歷</h3>
-            {resume.education.map(ed => (
-              <div key={ed.id} className="card">
-                <div className="row">
-                  <input placeholder="學校" value={ed.institution} onChange={(e) => updateListItem('education', ed.id, 'institution', e.target.value)} />
-                  <input placeholder="學位/科系" value={ed.degree} onChange={(e) => updateListItem('education', ed.id, 'degree', e.target.value)} />
-                </div>
-                <div className="row">
-                  <input placeholder="起始 (YYYY-MM)" value={ed.startDate} onChange={(e) => updateListItem('education', ed.id, 'startDate', e.target.value)} />
-                  <input placeholder="結束 (YYYY-MM)" value={ed.endDate} onChange={(e) => updateListItem('education', ed.id, 'endDate', e.target.value)} />
-                  <input placeholder="地點" value={ed.location} onChange={(e) => updateListItem('education', ed.id, 'location', e.target.value)} />
-                </div>
-                <div className="sublist">
-                  <div className="sublist__header">
-                    <span>細節</span>
-                    <button onClick={() => addEducationDetail(ed.id)}>新增細節</button>
-                  </div>
-                  {ed.details.map((d, i) => (
-                    <div className="row" key={i}>
-                      <input placeholder={`細節 #${i + 1}`} value={d} onChange={(e) => updateEducationDetail(ed.id, i, e.target.value)} />
-                      <button onClick={() => removeEducationDetail(ed.id, i)}>移除</button>
-                    </div>
-                  ))}
-                </div>
-                <div className="row end">
-                  <button onClick={() => removeEducation(ed.id)}>刪除這筆學歷</button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="section">
-            <h3>技能</h3>
-            {resume.skills.map((skill, i) => (
-              <div className="row" key={i}>
-                <input placeholder={`技能 #${i + 1}`} value={skill} onChange={(e) => updateStringArrayItem('skills', i, e.target.value)} />
-                <button onClick={() => removeSkill(i)}>移除</button>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="preview">
-          <div className="paper" id="resume">
-            <header className="paper__header">
-              <h1>{resume.basics.name || '你的名字'}</h1>
-              <div className="subtitle">{resume.basics.title || '你的職稱'}</div>
-              <div className="meta">
-                {[resume.basics.email, resume.basics.phone, resume.basics.website, resume.basics.location]
-                  .filter(Boolean)
-                  .join(' · ')}
-              </div>
-            </header>
-            {resume.summary && (
-              <section>
-                <h2>自我介紹</h2>
-                <p>{resume.summary}</p>
-              </section>
-            )}
-            {resume.experience.filter(e => e.company || e.role || e.highlights.some(Boolean)).length > 0 && (
-              <section>
-                <h2>工作經歷</h2>
-                {resume.experience.map(e => (
-                  (e.company || e.role || e.highlights.some(Boolean)) && (
-                    <div key={e.id} className="item">
-                      <div className="item__header">
-                        <div>
-                          <div className="item__title">{e.role || '職稱'}</div>
-                          <div className="item__org">{e.company}</div>
-                        </div>
-                        <div className="item__meta">
-                          {[e.startDate, e.endDate].filter(Boolean).join(' - ')}{e.location ? ` · ${e.location}` : ''}
-                        </div>
-                      </div>
-                      {e.highlights.filter(Boolean).length > 0 && (
-                        <ul>
-                          {e.highlights.filter(Boolean).map((h, i) => (
-                            <li key={i}>{h}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  )
-                ))}
-              </section>
-            )}
-            {resume.education.filter(e => e.institution || e.degree || e.details.some(Boolean)).length > 0 && (
-              <section>
-                <h2>學歷</h2>
-                {resume.education.map(e => (
-                  (e.institution || e.degree || e.details.some(Boolean)) && (
-                    <div key={e.id} className="item">
-                      <div className="item__header">
-                        <div>
-                          <div className="item__title">{e.degree || '學位/科系'}</div>
-                          <div className="item__org">{e.institution}</div>
-                        </div>
-                        <div className="item__meta">
-                          {[e.startDate, e.endDate].filter(Boolean).join(' - ')}{e.location ? ` · ${e.location}` : ''}
-                        </div>
-                      </div>
-                      {e.details.filter(Boolean).length > 0 && (
-                        <ul>
-                          {e.details.filter(Boolean).map((d, i) => (
-                            <li key={i}>{d}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  )
-                ))}
-              </section>
-            )}
-            {resume.skills.filter(Boolean).length > 0 && (
-              <section>
-                <h2>技能</h2>
-                <p className="skills">
-                  {resume.skills.filter(Boolean).join(' · ')}
-                </p>
-              </section>
-            )}
-          </div>
-          <div className="preview__actions no-print">
-            <button onClick={printResume}>列印/匯出PDF</button>
-          </div>
-        </section>
+        </div>
       </main>
+
+      <footer className="app-footer">
+        <p>💡 提示：滑鼠懸停在符號上可查看 LaTeX 代碼</p>
+      </footer>
     </div>
   )
 }
